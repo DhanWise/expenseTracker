@@ -1,56 +1,39 @@
 import React , {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNote } from './NoteContext';
+
+// ASSUM: For now let's start with no local storage
+// Once we set up the context API properly, then we can think about working with local storage.
 
 
-async function saveDataToStorage(data): Promise<void> {
-  try {
-    await AsyncStorage.setItem('notes', JSON.stringify(data));
-    console.log('Notes saved successfully!');
-  } catch (error) {
-    console.log('Error saving notes: ', error);
-  }
-}
 
 function NoteList({ navigation }) : React.JSX.Element {
-  // TODO: Run useEffect hook to load data and 
-  // block the rendering of the component until that is done. 
-  const [notes, setNotes] = useState([]);
+  // const [notes, setNotes] = useState([]);
+  const { state, addNote, removeNote } = useNote();
 
   useEffect(() => {
     
     async function loadData() : string[] {
-    // TODO : Load the data from local storage
     const savedData = await AsyncStorage.getItem('notes');
     if (savedData) {
       console.log("Returning saved Data.")
-      setNotes(JSON.parse(savedData));
+      //TODO: Need to find a way to update the state from here. 
+        // for now we can simply iterate over the list and insert it in it. 
+      // state = JSON.parse(savedData);
     } else {
       console.log("No saved data found.")
-      return setNotes([]);
+      // return setNotes([]);
     }}
     loadData();
   }, []);
 
-  function addNote(note) {
-    //TODO: Remove this from here. 
-    console.log("Adding: " + note + " to list: " + notes);
-    const newNotes = [...notes, note];
-    setNotes(newNotes);
-    saveDataToStorage(newNotes);
-  }
-
-  function deleteNotes(index) {
-    const newNotes = [...notes];
-    newNotes.splice(index, 1);
-    setNotes(newNotes);
-    saveDataToStorage(newNotes);
-  }
-
   return (
+    //TODO: Iterate over the state properly,
+    // Right now it's assumed that 'state' is an array of strings.
     <View style={style.container}>
       <FlatList
-        data={notes}
+        data={state.notes}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item, index}) => (
           <View style={style.noteContainer}>
@@ -58,7 +41,7 @@ function NoteList({ navigation }) : React.JSX.Element {
               <Text>{item}</Text>
             </View>
             <TouchableOpacity
-              onPress={() => deleteNotes(index)}
+              onPress={() => removeNote(index)}
               style={style.deleteButtonContainer}>
               <Text style={style.buttonText}>-</Text>
             </TouchableOpacity>
@@ -66,7 +49,7 @@ function NoteList({ navigation }) : React.JSX.Element {
         )}
       />
     <TouchableOpacity 
-      onPress={() => navigation.navigate('NoteFormScreen', { addNote })}
+      onPress={() => navigation.navigate('NoteFormScreen', {})}
       style={style.addButtonContainer}
     >
       <Text style={style.buttonText}>+</Text>

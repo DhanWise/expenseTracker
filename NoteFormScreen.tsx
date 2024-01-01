@@ -1,12 +1,13 @@
 import react, { useState, useLayoutEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { useNote } from './NoteContext';
 
-function NoteFormScreen({ navigation, route }) : React.JSX.Element {
-  const [note, setNote] = useState('');
+function NoteFormScreen({ navigation }) : React.JSX.Element {
+  const [localNote, setLocalNote] = useState('');
+  const { state, addNote, removeNote } = useNote();
 
   function handleAddNote() {
-    const { addNote } = route.params;
-    addNote(note);
+    addNote(localNote);
     navigation.goBack();
   }
 
@@ -15,8 +16,8 @@ function NoteFormScreen({ navigation, route }) : React.JSX.Element {
       <TextInput
         style={styles.input}
         placeholder="What you thinking?"
-        value={note}
-        onChangeText={(text) => setNote(text)}
+        value={localNote}
+        onChangeText={(text) => setLocalNote(text)}
         multiline={true}
         numberOfLines={4}
         textAlignVertical="top"
