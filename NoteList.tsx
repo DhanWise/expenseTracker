@@ -3,34 +3,11 @@ import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity } from 'reac
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNote } from './NoteContext';
 
-// ASSUM: For now let's start with no local storage
-// Once we set up the context API properly, then we can think about working with local storage.
-
-
 
 function NoteList({ navigation }) : React.JSX.Element {
-  // const [notes, setNotes] = useState([]);
   const { state, addNote, removeNote } = useNote();
 
-  useEffect(() => {
-    
-    async function loadData() : string[] {
-    const savedData = await AsyncStorage.getItem('notes');
-    if (savedData) {
-      console.log("Returning saved Data.")
-      //TODO: Need to find a way to update the state from here. 
-        // for now we can simply iterate over the list and insert it in it. 
-      // state = JSON.parse(savedData);
-    } else {
-      console.log("No saved data found.")
-      // return setNotes([]);
-    }}
-    loadData();
-  }, []);
-
   return (
-    //TODO: Iterate over the state properly,
-    // Right now it's assumed that 'state' is an array of strings.
     <View style={style.container}>
       <FlatList
         data={state.notes}

@@ -8,7 +8,6 @@ import { NoteProvider } from './NoteContext';
 const Stack = createNativeStackNavigator();
 
 function App() : React.JSX.Element {
-  //TODO: Indent the jsx element
   return (
     <NoteProvider>
     <NavigationContainer>

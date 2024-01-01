@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getStoredNotes, saveDataToStorage, cleanUpData } from './LocalStorage';
+import { getStoredNotes, saveDataToStorage } from './LocalStorage';
 const NoteContext = createContext();
 
 const initialState = {
